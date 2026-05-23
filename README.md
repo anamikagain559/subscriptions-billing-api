@@ -64,7 +64,13 @@ docker-compose up --build
 
 ## API Endpoints
 
-The API is structured under the `/api/v1` prefix. A Postman collection (`postman_collection.json`) is included in the root directory for easy testing.
+The API is structured under the `/api/v1` prefix. 
+
+### Postman Collection
+You can view and test all the API endpoints directly using the following Postman link:
+👉 [View API Collection on Postman](https://winter-sunset-301429-1.postman.co/workspace/My-Workspace~7addf033-df20-4e26-8d51-282ef0de3cf8/collection/18689428-241e600e-f62a-4273-99a0-40e42bd64b7c?action=share&source=copy-link&creator=18689428)
+
+Alternatively, a Postman collection (`postman_collection.json`) is included in the root directory for manual import.
 
 ### Authentication (`/api/v1/auth`)
 - `POST /register` - Register a new user

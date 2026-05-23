@@ -11,7 +11,7 @@ export const config = {
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'super_secret_key',
-    accessExpirationMinutes: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES || 30),
+    accessExpirationMinutes: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES || 43200), // 30 days in minutes
     refreshExpirationDays: Number(process.env.JWT_REFRESH_EXPIRATION_DAYS || 30),
   },
   webhook: {

@@ -1,6 +1,13 @@
 import { Subscription, ISubscription } from '../models/subscription.model';
 import { Plan } from '../models/plan.model';
+import { User } from '../models/user.model';
 import { ApiError } from '../utils/ApiError';
+import Stripe from 'stripe';
+import { config } from '../config';
+
+const stripe = new Stripe(config.stripe.secretKey as string, {
+  apiVersion: '2026-04-22.dahlia',
+});
 
 export const purchaseSubscription = async (userId: string, planId: string): Promise<ISubscription> => {
   const newPlan = await Plan.findById(planId);
@@ -37,16 +44,44 @@ export const purchaseSubscription = async (userId: string, planId: string): Prom
     expiryDate.setFullYear(expiryDate.getFullYear() + 1);
   }
 
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, 'User not found');
+
+  // Create Stripe Checkout Session
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    mode: 'subscription',
+    customer_email: user.email,
+    line_items: [
+      {
+        price_data: {
+          currency: 'inr',
+          product_data: { name: newPlan.name },
+          unit_amount: Math.round(newPlan.price * 100), // Convert to paise (₹)
+          recurring: { interval: newPlan.billingCycle === 'monthly' ? 'month' : 'year' },
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `http://localhost:3000/cancel`,
+    metadata: {
+      userId: userId.toString(),
+      planId: planId.toString(),
+    },
+  });
+
   const subscription = await Subscription.create({
     userId,
     planId,
-    status: 'active',
+    status: 'pending',
     startDate,
     expiryDate,
     autoRenew: true,
+    stripeSessionId: session.id,
   });
 
-  return subscription;
+  return { subscription, url: session.url } as any;
 };
 
 export const cancelSubscription = async (userId: string, subscriptionId: string): Promise<ISubscription> => {

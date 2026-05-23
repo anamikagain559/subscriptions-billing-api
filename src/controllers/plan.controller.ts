@@ -4,7 +4,11 @@ import * as planService from '../services/plan.service';
 
 export const createPlan = catchAsync(async (req: Request, res: Response) => {
   const plan = await planService.createPlan(req.body);
-  res.status(201).send(plan);
+  res.status(201).send({
+    success: true,
+    message: "Plan created successfully",
+    data: plan
+  });
 });
 
 export const getPlans = catchAsync(async (req: Request, res: Response) => {

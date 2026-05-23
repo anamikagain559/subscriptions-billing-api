@@ -13,6 +13,9 @@ const app = express();
 // Security HTTP headers
 app.use(helmet());
 
+// Stripe webhook requires raw body
+app.use('/api/v1/webhook', express.raw({ type: 'application/json' }));
+
 // Parse json request body
 app.use(express.json());
 

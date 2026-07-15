@@ -19,10 +19,13 @@ const subscriptionSchema = new mongoose.Schema<ISubscription>(
     startDate: { type: Date, required: true, default: Date.now },
     expiryDate: { type: Date, required: true },
     autoRenew: { type: Boolean, default: true },
-    stripeSessionId: { type: String },
-    stripeSubscriptionId: { type: String },
+    stripeSessionId: { type: String, index: true },
+    stripeSubscriptionId: { type: String, index: true },
   },
   { timestamps: true }
 );
+
+// Compound index for finding a user's active subscription quickly
+subscriptionSchema.index({ userId: 1, status: 1 });
 
 export const Subscription = mongoose.model<ISubscription>('Subscription', subscriptionSchema);

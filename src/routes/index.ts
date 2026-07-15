@@ -1,14 +1,11 @@
-import { Router } from 'express';
-import authRoute from './auth.route';
-import planRoute from './plan.route';
-import subscriptionRoute from './subscription.route';
-import webhookRoute from './webhook.route';
+import { Router } from "express";
 
-const router = Router();
+export const router = Router();
 
-router.use('/auth', authRoute);
-router.use('/plans', planRoute);
-router.use('/subscriptions', subscriptionRoute);
-router.use('/webhook', webhookRoute);
+const moduleRoutes: { path: string; route: any }[] = [
+  // { path: "/auth", route: AuthRoutes },
+  // { path: "/users", route: UserRoutes },
+  // { path: "/subscriptions", route: SubscriptionRoutes },
+];
 
-export default router;
+moduleRoutes.forEach((route) => router.use(route.path, route.route));

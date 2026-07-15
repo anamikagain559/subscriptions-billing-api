@@ -18,7 +18,7 @@ export const config = {
     secret: process.env.WEBHOOK_SECRET || 'webhook_secret_key',
   },
   stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY || 'sk_test_...',
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_...',
+    secretKey: process.env.STRIPE_SECRET_KEY || 'your_stripe_secret',
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || 'your_webhook_secret',
   }
 };

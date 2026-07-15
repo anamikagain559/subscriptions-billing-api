@@ -1,51 +1,43 @@
-import express, { Request, Response } from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
-import morgan from 'morgan';
-import { errorHandler } from './middlewares/error';
-import routes from './routes';
-import { connectDB } from './config/db';
-import { config } from './config';
-import { logger } from './config/logger';
+import cors from "cors";
+import express, { Request, Response } from "express";
+import { globalErrorHandler } from "./modules/middlewares/globalErrorHandler";
+import notFound from "./modules/middlewares/notFound";
+import { router } from "./routes";
 
 const app = express();
 
-// Security HTTP headers
-app.use(helmet());
-
-// Stripe webhook requires raw body
-app.use('/api/v1/webhook', express.raw({ type: 'application/json' }));
-
-// Parse json request body
 app.use(express.json());
 
-// Parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
 
-// Enable cors
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow Postman / server-to-server
+      if (!origin) return callback(null, true);
 
-// HTTP request logger
-if (config.env !== 'test') {
-  app.use(morgan('dev'));
-}
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
 
-// v1 api routes
-app.use('/api/v1', routes);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 
-// Base route
-app.get('/', (req: Request, res: Response) => {
-  res.send('Subscription Billing API is running!');
-});
+app.use("/api/v1", router);
 
-// Error handling middleware
-app.use(errorHandler);
-
-// Connect to MongoDB and start server
-connectDB().then(() => {
-  app.listen(config.port, () => {
-    logger.info(`Server listening on port ${config.port}`);
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Welcome to Subscription Billing API"
   });
 });
+
+app.use(globalErrorHandler);
+app.use(notFound);
 
 export default app;

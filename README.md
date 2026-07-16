@@ -1,112 +1,144 @@
-# Subscription Billing API
+<div align="center">
+  <h1>🚀 Subscription Billing API</h1>
+  <p><strong>A robust, scalable RESTful API for handling modern subscription plans and billing seamlessly.</strong></p>
 
-A robust RESTful API for managing user subscriptions, billing plans, and webhook events. Built with Node.js, Express, TypeScript, and MongoDB.
+  <!-- Badges -->
+  <p>
+    <img alt="NodeJS" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+    <img alt="Express" src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" />
+    <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
+    <img alt="Stripe" src="https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white" />
+  </p>
+</div>
 
-## Features
+<hr/>
 
-- **Authentication**: Secure user registration and login using JWT and bcrypt.
-- **Plan Management**: Create and list subscription plans with different billing cycles and features.
-- **Subscription Handling**: Purchase, upgrade, and cancel subscriptions seamlessly.
-- **Webhook Integration**: Endpoint to handle external payment/subscription events (e.g., `payment_success`).
-- **Security & Validation**: Input validation using Zod, and security headers with Helmet & CORS.
-- **Logging**: Comprehensive logging setup using Winston and Morgan.
-- **Dockerized**: Easy to deploy with provided Dockerfile and Docker Compose configurations.
+## ✨ Features
+- 🔐 **Authentication & Authorization:** Secure registration and login flows using JWT and bcrypt.
+- 💳 **Stripe Billing Integration:** Fully integrated with Stripe Checkout for secure and hassle-free payments.
+- 📦 **Plan Management:** Flexible creation and listing of varied subscription tiers (monthly/yearly).
+- 🔄 **Subscription Lifecycle:** Purchase, upgrade, and cancel subscriptions instantly.
+- ⚡ **Automated Webhooks:** Built-in listener for Stripe events (e.g., successful payments, cancellations, etc).
+- 🛡️ **Security First:** Robust validation with **Zod**, HTTP header security with **Helmet**, and intelligent error handling.
+- 🐳 **Docker Ready:** Comes with a `Dockerfile` and `docker-compose.yml` for rapid deployment.
 
-## Tech Stack
+---
 
-- **Runtime**: Node.js
-- **Framework**: Express.js (v5)
-- **Language**: TypeScript
-- **Database**: MongoDB (Mongoose)
-- **Validation**: Zod
-- **Auth**: JSON Web Tokens (JWT) & bcryptjs
-- **Logging**: Winston & Morgan
+## 🛠️ Tech Stack
+| Category | Technology |
+| :--- | :--- |
+| **Runtime** | Node.js (v18+) |
+| **Framework** | Express.js |
+| **Language** | TypeScript |
+| **Database** | MongoDB (Mongoose) |
+| **Payment Gateway**| Stripe API |
+| **Validation** | Zod |
+| **Logging** | Winston & Morgan |
 
-## Getting Started
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js (v18 or higher recommended)
-- MongoDB running locally or a MongoDB URI
-- Docker (optional, for containerized setup)
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [MongoDB](https://www.mongodb.com/) (Local or Atlas URI)
+- [Docker](https://www.docker.com/) (Optional, for containerized deployment)
+- [Stripe Account](https://stripe.com/) (For API keys and webhooks)
 
 ### Installation
 
-1. Clone the repository and navigate to the project directory:
+1. **Clone the repository:**
    ```bash
+   git clone <your-repo-url>
    cd subscription-billing-api
    ```
 
-2. Install the dependencies:
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. Configure your environment variables. Create a `.env` file in the root directory based on the `.env` configuration (e.g., PORT, MONGO_URI, JWT_SECRET, WEBHOOK_SECRET).
+3. **Set up Environment Variables:**
+   Create a `.env` file in the root folder and add the required variables. Example:
+   ```env
+   PORT=5000
+   NODE_ENV=development
+   MONGO_URI=mongodb://localhost:27017/billing_db
+   JWT_SECRET=your_super_secret_jwt_key
+   JWT_EXPIRES_IN=1d
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   ```
 
-### Running the Application
+4. **Start the Application:**
+   
+   **Development Mode:**
+   ```bash
+   npm run dev
+   ```
+   **Production Mode:**
+   ```bash
+   npm run build
+   npm start
+   ```
+   
+   **Using Docker (Recommended):**
+   ```bash
+   docker-compose up --build
+   ```
 
-**Development Mode:**
-```bash
-npm run dev
-```
+---
 
-**Production Mode:**
-```bash
-npm run build
-npm start
-```
+## 🌐 API Overview
 
-**Using Docker:**
-```bash
-docker-compose up --build
-```
+The API is mounted under the `/api/v1` prefix. 
 
-## API Endpoints
+### 🧪 Postman Collection
+Test the API seamlessly via the included Postman Collection:  
+👉 [View API on Postman](https://winter-sunset-301429-1.postman.co/workspace/My-Workspace~7addf033-df20-4e26-8d51-282ef0de3cf8/collection/18689428-241e600e-f62a-4273-99a0-40e42bd64b7c?action=share&source=copy-link&creator=18689428)  
+*(Alternatively, import `postman_collection.json` located in the root directory)*
 
-The API is structured under the `/api/v1` prefix. 
+<details>
+<summary><strong>Click to see Endpoints Summary</strong></summary>
 
-### Postman Collection
-You can view and test all the API endpoints directly using the following Postman link:
-👉 [View API Collection on Postman](https://winter-sunset-301429-1.postman.co/workspace/My-Workspace~7addf033-df20-4e26-8d51-282ef0de3cf8/collection/18689428-241e600e-f62a-4273-99a0-40e42bd64b7c?action=share&source=copy-link&creator=18689428)
+- **Auth** (`/api/v1/auth`)
+  - `POST /register` - Register user
+  - `POST /login` - Login user
+- **Plans** (`/api/v1/plans`)
+  - `GET /` - List all plans
+  - `POST /` - Create a plan (Admin/Auth)
+- **Subscriptions** (`/api/v1/subscriptions`)
+  - `GET /my` - Fetch current user's subscription
+  - `GET /history` - Fetch current user's subscription history
+  - `POST /purchase` - Purchase/upgrade plan via Stripe Checkout
+  - `POST /:subscriptionId/cancel` - Cancel active subscription
+- **Webhooks** (`/api/v1/webhooks`)
+  - `POST /` - Stripe webhook listener for real-time syncing
+</details>
 
-Alternatively, a Postman collection (`postman_collection.json`) is included in the root directory for manual import.
+---
 
-### Authentication (`/api/v1/auth`)
-- `POST /register` - Register a new user
-- `POST /login` - Login and receive a JWT token
+## 📂 Project Structure
 
-### Plans (`/api/v1/plans`)
-- `GET /` - Retrieve all available plans
-- `POST /` - Create a new plan (Requires Auth)
-
-### Subscriptions (`/api/v1/subscriptions`)
-- `GET /my` - Get the current user's subscription details (Requires Auth)
-- `POST /purchase` - Purchase or upgrade a subscription (Requires Auth)
-- `POST /:id/cancel` - Cancel a specific subscription (Requires Auth)
-
-### Webhooks (`/api/v1/webhook`)
-- `POST /` - Handle incoming webhook events (Requires `x-webhook-secret` header)
-
-## Project Structure
-
-```
+```text
 subscription-billing-api/
 ├── src/
-│   ├── config/       # Environment variables and configuration
-│   ├── controllers/  # Route controllers (req, res logic)
-│   ├── middlewares/  # Custom Express middlewares (Auth, Error handling)
-│   ├── models/       # Mongoose schemas and models
-│   ├── routes/       # API route definitions
-│   ├── services/     # Business logic layer
-│   ├── utils/        # Helper functions and utilities
-│   └── app.ts        # Express app entry point
-├── Dockerfile        # Docker image configuration
-├── docker-compose.yml# Multi-container Docker setup
-├── package.json      # Dependencies and scripts
-└── tsconfig.json     # TypeScript configuration
+│   ├── config/       # Environment & 3rd-party configs
+│   ├── controllers/  # Route handlers (Req/Res logic)
+│   ├── middlewares/  # Express middlewares (Auth, Validation)
+│   ├── models/       # Mongoose schemas & TypeScript interfaces
+│   ├── routes/       # API router setup
+│   ├── services/     # Business logic & Stripe interactions
+│   ├── utils/        # Utilities and helpers (Error classes, Async handlers)
+│   └── server.ts     # Express app entry point
+├── Dockerfile        # Container build instructions
+├── docker-compose.yml# Container orchestration
+└── package.json      # Dependencies and scripts
 ```
 
-## License
+---
 
-ISC
+## 📜 License
+This project is licensed under the **ISC License**.

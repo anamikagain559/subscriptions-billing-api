@@ -1,16 +1,30 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
+import mongoose from "mongoose";
 import { globalErrorHandler } from "./modules/middlewares/globalErrorHandler";
 import notFound from "./modules/middlewares/notFound";
 import { router } from "./routes";
+import { envVars } from "./config/env";
 
 const app = express();
+
+// Connect to MongoDB for Serverless (Vercel)
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
+  try {
+    await mongoose.connect(envVars.MONGODB_URL);
+    console.log("🛢️ Connected to Database (Serverless)");
+  } catch (err) {
+    console.error("Failed to connect to database:", err);
+  }
+};
+connectDB();
 
 app.use(express.json());
 
 app.use(
   cors({
-    origin: true, // Allow any origin
+    origin: ["https://weather-ai-app-eta.vercel.app", "http://localhost:5173", "http://localhost:3000", "http://localhost:5000"],
     credentials: true,
   })
 );

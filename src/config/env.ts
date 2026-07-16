@@ -5,7 +5,7 @@ dotenv.config();
 
 const envSchema = z.object({
   PORT: z.string().default("5000"),
-  MONGODB_URL: z.string().default("mongodb://localhost:27017/subscription-billing"),
+  MONGODB_URL: z.string().default("mongodb+srv://anamikagain8:1xvOREUhSh2qWGyq@cluster0.o6amai6.mongodb.net/subscription_billing?retryWrites=true&w=majority&appName=Cluster0"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   JWT_SECRET: z.string().default("my_super_secret_subscription_jwt_key"),
 });

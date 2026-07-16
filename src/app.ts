@@ -18,9 +18,14 @@ const connectDB = async () => {
     console.error("Failed to connect to database:", err);
   }
 };
-connectDB();
 
 app.use(express.json());
+
+// Ensure DB is connected before handling any requests
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 app.use(
   cors({

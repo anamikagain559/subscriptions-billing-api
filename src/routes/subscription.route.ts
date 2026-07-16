@@ -11,5 +11,6 @@ router.use(auth);
 router.post('/purchase', validate(purchaseSchema), subscriptionController.purchase);
 router.post('/:subscriptionId/cancel', subscriptionController.cancel);
 router.get('/my', subscriptionController.mySubscription);
+router.get('/history', subscriptionController.history);
 
 export default router;

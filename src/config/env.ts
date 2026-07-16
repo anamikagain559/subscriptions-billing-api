@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
 import { z } from "zod";
 
-import path from "path";
-
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config();
 
 const envSchema = z.object({
   PORT: z.string().default("5000"),
   MONGODB_URL: z.string().default("mongodb://localhost:27017/subscription-billing"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  JWT_SECRET: z.string().default("my_super_secret_subscription_jwt_key"),
 });
 
 const _envVars = envSchema.safeParse(process.env);

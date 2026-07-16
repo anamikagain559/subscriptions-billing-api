@@ -17,3 +17,8 @@ export const mySubscription = catchAsync(async (req: AuthRequest, res: Response)
   const subscription = await subscriptionService.getUserSubscription(req.user._id as string);
   res.send({ activeSubscription: subscription });
 });
+
+export const history = catchAsync(async (req: AuthRequest, res: Response) => {
+  const history = await subscriptionService.getUserSubscriptionHistory(req.user._id as string);
+  res.send(history);
+});

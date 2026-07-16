@@ -63,8 +63,8 @@ export const purchaseSubscription = async (userId: string, planId: string): Prom
         quantity: 1,
       },
     ],
-    success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:3000/cancel`,
+    success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `http://localhost:5173/cancel`,
     metadata: {
       userId: userId.toString(),
       planId: planId.toString(),
@@ -107,4 +107,8 @@ export const getUserSubscription = async (userId: string): Promise<ISubscription
   }
   
   return subscription;
+};
+
+export const getUserSubscriptionHistory = async (userId: string): Promise<ISubscription[]> => {
+  return await Subscription.find({ userId }).populate('planId').sort({ createdAt: -1 });
 };
